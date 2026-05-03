@@ -1,0 +1,124 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 48px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.logoMark {
+  color: var(--accent);
+  font-size: 16px;
+}
+
+.topHint {
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.tourBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s;
+}
+.tourBtn:hover { color: var(--text); border-color: var(--border-hover); }
+
+/* Desktop: side-by-side */
+.splitScreen {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.splitScreen > * {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Mobile tab switcher — hidden on desktop */
+.tabBar {
+  display: none;
+}
+
+/* ── Mobile (≤ 768px) ── */
+@media (max-width: 768px) {
+  .topHint { display: none; }
+  .topBar { padding: 0 12px; gap: 8px; }
+  .tourBtn span { display: none; } /* icon only */
+  .tourBtn { padding: 5px 8px; }
+
+  .splitScreen {
+    flex-direction: column;
+    position: relative;
+  }
+
+  .splitScreen > * {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .splitScreen > .activePanel {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .tabBar {
+    display: flex;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .tabBtn {
+    flex: 1;
+    padding: 10px 0;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-3);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .tabBtn.activeTab {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+}

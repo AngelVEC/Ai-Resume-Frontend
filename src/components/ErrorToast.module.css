@@ -1,0 +1,111 @@
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  z-index: 200;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--surface2);
+  border: 1px solid rgba(255, 100, 100, 0.3);
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
+  min-width: 300px;
+  max-width: 480px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  animation: slideUp 0.25s ease;
+}
+
+.hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(12px);
+  pointer-events: none;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.icon {
+  color: #ff6b6b;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.message {
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.retryHint {
+  font-size: 11px;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+.closeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text-3);
+  transition: color 0.12s, border-color 0.12s;
+  flex-shrink: 0;
+}
+
+.closeBtn:hover {
+  color: var(--text);
+  border-color: var(--border-hover);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .toast {
+    bottom: 80px; /* above the tab bar */
+    left: 14px;
+    right: 14px;
+    transform: none;
+    min-width: unset;
+    max-width: unset;
+  }
+
+  .visible { transform: none; animation: slideUpMobile 0.25s ease; }
+  .hidden  { transform: translateY(12px); }
+
+  @keyframes slideUpMobile {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}

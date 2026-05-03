@@ -1,0 +1,242 @@
+.panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface2);
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  cursor: pointer;
+  user-select: none;
+  background: var(--surface2);
+}
+
+.panelTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-2);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Loading */
+.loadingBody {
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.loadingBar {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.loadingFill {
+  height: 100%;
+  width: 40%;
+  background: var(--accent);
+  border-radius: 2px;
+  animation: slide 1.2s ease-in-out infinite;
+}
+
+@keyframes slide {
+  0%   { transform: translateX(-100%); width: 40%; }
+  50%  { width: 60%; }
+  100% { transform: translateX(300%); width: 40%; }
+}
+
+.loadingText {
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+/* Error */
+.errorBody {
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.errorMsg {
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+.retryBtn {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent-fg);
+  background: var(--accent);
+  border: none;
+  border-radius: 5px;
+  padding: 4px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Result */
+.resultBody {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.scoreRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ringWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.ringLabel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+}
+
+.ringScore {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.ringPct {
+  font-size: 10px;
+  color: var(--text-3);
+  margin-top: 4px;
+}
+
+.scoreMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.labelStrong { font-size: 12px; font-weight: 600; color: #d4ff6e; }
+.labelGood   { font-size: 12px; font-weight: 600; color: #4a9eff; }
+.labelModerate { font-size: 12px; font-weight: 600; color: #f0a500; }
+.labelWeak   { font-size: 12px; font-weight: 600; color: #ff6b6b; }
+
+.summary {
+  font-size: 11px;
+  color: var(--text-2);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Sections */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.strengthItem, .gapItem {
+  font-size: 11px;
+  line-height: 1.5;
+  padding-left: 12px;
+  position: relative;
+  color: var(--text-2);
+}
+
+.strengthItem::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #d4ff6e;
+  font-size: 10px;
+}
+
+.gapItem::before {
+  content: '!';
+  position: absolute;
+  left: 1px;
+  color: #f0a500;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* Keywords */
+.keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.keyword {
+  font-size: 11px;
+  font-weight: 500;
+  color: #4a9eff;
+  background: rgba(74, 158, 255, 0.1);
+  border: 1px solid rgba(74, 158, 255, 0.2);
+  border-radius: 4px;
+  padding: 2px 7px;
+}
+
+/* Spinner */
+.spinner {
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid var(--border-hover);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .scoreRow { gap: 8px; }
+  .resultBody { padding: 10px; }
+  .keywords { gap: 4px; }
+  .loadingBody { padding: 8px 10px; }
+  .errorBody { padding: 8px 10px; flex-wrap: wrap; }
+}

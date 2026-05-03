@@ -1,0 +1,59 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0f0f0f;
+  --surface: #1a1a1a;
+  --surface2: #242424;
+  --border: rgba(255,255,255,0.08);
+  --border-hover: rgba(255,255,255,0.15);
+  --text: #f0ede8;
+  --text-2: #9a9690;
+  --text-3: #5c5a57;
+  --accent: #d4ff6e;
+  --accent-fg: #1a2400;
+  --info: #4a9eff;
+  --danger: #ff6b6b;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --font: 'DM Sans', system-ui, sans-serif;
+  --mono: 'DM Mono', monospace;
+}
+
+html, body, #root {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  /* Prevent pull-to-refresh on mobile interfering with the app */
+  overscroll-behavior: none;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 4px; }
+
+::placeholder { color: var(--text-3); }
+
+textarea, input {
+  font-family: var(--font);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  outline: none;
+  transition: border-color 0.15s;
+  resize: none;
+}
+
+textarea:focus, input:focus {
+  border-color: var(--border-hover);
+}
+
+button {
+  font-family: var(--font);
+  cursor: pointer;
+}

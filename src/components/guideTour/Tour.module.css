@@ -1,7 +1,7 @@
 .tourRoot {
   position: fixed;
   inset: 0;
-  z-index: 300;
+  z-index: 500;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.2s ease;
@@ -36,7 +36,7 @@
   border-radius: var(--radius-lg);
   padding: 16px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-  z-index: 301;
+  z-index: 501;
   animation: popIn 0.2s ease;
   pointer-events: all;
 }
@@ -175,6 +175,25 @@
 @media (max-width: 768px) {
   .bubble {
     width: calc(100vw - 32px);
+    max-width: calc(100vw - 32px);
     left: 16px !important;
+    padding: 12px;
   }
+
+  .bubbleTitle { font-size: 13px; }
+  .bubbleContent { font-size: 11px; margin-bottom: 8px; }
+  .nextBtn, .prevBtn { font-size: 11px; padding: 5px 10px; }
+  .skipBtn { font-size: 10px; }
+
+  .inlineDemo {
+    margin: 0 -12px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    max-height: 40vh;
+    overflow-y: auto;
+  }
+}
+
+.inlineDemo {
+  display: none; /* hidden on desktop — uses floating preview instead */
 }

@@ -153,13 +153,30 @@ function DemoPreview({ component, bubbleRect }) {
     const ph = ref.current.offsetHeight || 300
     const vw = window.innerWidth
     const vh = window.innerHeight
-    // Try to place to the left of bubble, else right, else below
-    let left = bubbleRect.left - pw - 12
-    if (left < 8) left = bubbleRect.right + 12
-    if (left + pw > vw - 8) left = Math.max(8, vw - pw - 8)
-    let top = bubbleRect.top
-    if (top + ph > vh - 8) top = vh - ph - 8
-    if (top < 8) top = 8
+    const isMobile = vw <= 768
+
+    let left, top
+
+    if (isMobile) {
+      // On mobile: full width, centred, placed above the bubble
+      // to avoid overlapping with the app content below
+      left = Math.max(8, (vw - pw) / 2)
+      // Try above bubble first
+      top = bubbleRect.top - ph - 12
+      // If not enough space above, clamp to safe zone below header (~100px)
+      if (top < 100) top = Math.min(bubbleRect.bottom + 8, vh - ph - 8)
+      // Final clamp
+      top = Math.max(8, Math.min(top, vh - ph - 8))
+    } else {
+      // Desktop: try left of bubble, else right
+      left = bubbleRect.left - pw - 12
+      if (left < 8) left = bubbleRect.right + 12
+      if (left + pw > vw - 8) left = Math.max(8, vw - pw - 8)
+      top = bubbleRect.top
+      if (top + ph > vh - 8) top = vh - ph - 8
+      if (top < 8) top = 8
+    }
+
     setPos({ top, left })
   }, [bubbleRect])
 
@@ -174,7 +191,7 @@ function DemoPreview({ component, bubbleRect }) {
   if (!Component) return null
 
   return (
-    <div ref={ref} style={{ position: 'fixed', top: pos.top, left: pos.left, zIndex: 302 }}>
+    <div ref={ref} style={{ position: 'fixed', top: pos.top, left: pos.left, zIndex: 400 }}>
       <Component />
     </div>
   )
@@ -206,10 +223,19 @@ function Spotlight({ rect, padding = 8 }) {
 // ---------------------------------------------------------------------------
 // Bubble
 // ---------------------------------------------------------------------------
-function Bubble({ step, rect, stepIndex, totalSteps, onNext, onPrev, onSkip, onGoTo, onBubbleRect }) {
+function Bubble({ step, rect, stepIndex, totalSteps, onNext, onPrev, onSkip, onGoTo, onBubbleRect, demoComponent }) {
   const bubbleRef = useRef(null)
   const [pos, setPos] = useState({ top: 0, left: 0 })
   const [arrowPos, setArrowPos] = useState(null)
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
+
+  const componentMap = {
+    'ats-score': ATSScorePreview,
+    'sections': SectionEditorPreview,
+    'chat': ChatPreview,
+    'templates': TemplatePreview,
+  }
+  const InlineDemo = isMobile && demoComponent ? componentMap[demoComponent] : null
 
   useEffect(() => {
     if (!bubbleRef.current) return
@@ -286,6 +312,13 @@ function Bubble({ step, rect, stepIndex, totalSteps, onNext, onPrev, onSkip, onG
 
       <div className={styles.bubbleTitle}>{step.title}</div>
       <div className={styles.bubbleContent}>{step.content}</div>
+
+      {/* On mobile, show demo inline inside bubble instead of floating separately */}
+      {InlineDemo && (
+        <div className={styles.inlineDemo}>
+          <InlineDemo />
+        </div>
+      )}
 
       <div className={styles.bubbleFooter}>
         <button className={styles.skipBtn} onClick={onSkip}>{isLast ? 'Close' : 'Skip tour'}</button>
@@ -384,8 +417,10 @@ export default function Tour({ onDone, onOpenCoverLetter, onCloseCoverLetter }) 
         onSkip={finish}
         onGoTo={handleGoTo}
         onBubbleRect={setBubbleRect}
+        demoComponent={step.demoComponent}
       />
-      {step.demoComponent && bubbleRect && (
+      {/* Only show floating demo preview on desktop */}
+      {step.demoComponent && bubbleRect && window.innerWidth > 768 && (
         <DemoPreview component={step.demoComponent} bubbleRect={bubbleRect} />
       )}
     </div>

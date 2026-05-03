@@ -1,6 +1,6 @@
 .preview {
   position: fixed;
-  z-index: 302;
+  z-index: 400;
   background: var(--surface2);
   border: 1px solid var(--border-hover);
   border-radius: var(--radius-lg);
@@ -12,6 +12,17 @@
   gap: 10px;
   pointer-events: none;
   animation: fadeIn 0.2s ease;
+}
+
+/* When rendered inline inside the bubble on mobile */
+.inlinePreview {
+  position: static;
+  width: 100%;
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  padding: 10px 12px;
+  background: var(--surface);
 }
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: translateY(0) } }
@@ -363,9 +374,16 @@
 @media (max-width: 768px) {
   .preview {
     width: calc(100vw - 32px);
-    left: 16px !important;
-    right: 16px !important;
+    max-width: calc(100vw - 32px);
+    max-height: 45vh;
+    overflow-y: auto;
+    box-sizing: border-box;
   }
   .templateRow { gap: 5px; }
   .sectionCards { gap: 3px; }
+  .scoreRow { gap: 8px; }
+  .chatMessages { gap: 6px; }
+  /* Trim long text to avoid overflow */
+  .strengthItem, .gapItem { font-size: 10px; }
+  .sectionLine { font-size: 9px; }
 }

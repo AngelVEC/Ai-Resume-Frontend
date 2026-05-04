@@ -46,6 +46,26 @@
   to   { opacity: 1; transform: scale(1); }
 }
 
+/* Landscape hint — only shown on mobile in portrait */
+.landscapeHint {
+  display: none;
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+  .landscapeHint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(212, 255, 110, 0.08);
+    border: 1px solid rgba(212, 255, 110, 0.2);
+    border-radius: 6px;
+    padding: 6px 10px;
+    margin-bottom: 4px;
+  }
+}
+
 /* Arrow pointer */
 .arrow {
   position: absolute;

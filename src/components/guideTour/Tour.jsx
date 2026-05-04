@@ -42,6 +42,7 @@ export const TOUR_STEPS = [
     content: 'Before generating, click "Analyse match" to see how well your resume matches the job description — with a score, strengths, gaps, and missing keywords.',
     placement: 'top',
     demoComponent: 'ats-score',
+    landscapeHint: true,
   },
   {
     id: 'generate',
@@ -57,6 +58,7 @@ export const TOUR_STEPS = [
     title: '✨ Your tailored resume',
     content: 'The AI-generated resume appears here, formatted and ready to use. You can copy it, download as DOCX, check its ATS score, or generate a cover letter.',
     placement: 'left',
+    switchTab: 'output',
   },
   {
     id: 'chat',
@@ -65,6 +67,8 @@ export const TOUR_STEPS = [
     content: 'Not happy with something? Ask the AI to refine it — "make the summary shorter", "add more keywords", or anything else. Your messages appear on the right.',
     placement: 'top',
     demoComponent: 'chat',
+    switchTab: 'output',
+    landscapeHint: true,
   },
   {
     id: 'edit-sections',
@@ -73,6 +77,8 @@ export const TOUR_STEPS = [
     content: 'Switch to "Edit sections" view to edit each part of your resume individually. You can type changes manually or use the AI to rewrite just that section.',
     placement: 'left',
     demoComponent: 'sections',
+    switchTab: 'output',
+    landscapeHint: true,
   },
   {
     id: 'templates',
@@ -81,6 +87,8 @@ export const TOUR_STEPS = [
     content: 'Click "Download DOCX" to pick from 3 templates — Minimal, Modern, or Traditional — before downloading your resume as a Word file.',
     placement: 'left',
     demoComponent: 'templates',
+    switchTab: 'output',
+    landscapeHint: true,
   },
   // ── Cover letter ───────────────────────────────────────────────────────────
   {
@@ -96,6 +104,7 @@ export const TOUR_STEPS = [
     title: '📨 Open the Cover Letter tool',
     content: 'After generating your resume, this button appears in the output header. Click it to open the Cover Letter modal.',
     placement: 'bottom',
+    switchTab: 'output',
   },
   {
     id: 'cover-letter-modal',
@@ -168,13 +177,15 @@ function DemoPreview({ component, bubbleRect }) {
       // Final clamp
       top = Math.max(8, Math.min(top, vh - ph - 8))
     } else {
-      // Desktop: try left of bubble, else right
+      // Desktop: place to the left of bubble, else right
       left = bubbleRect.left - pw - 12
       if (left < 8) left = bubbleRect.right + 12
       if (left + pw > vw - 8) left = Math.max(8, vw - pw - 8)
-      top = bubbleRect.top
-      if (top + ph > vh - 8) top = vh - ph - 8
+
+      // Bottom-align with bubble bottom, then clamp so it never goes off-screen
+      top = bubbleRect.bottom - ph
       if (top < 8) top = 8
+      if (top + ph > vh - 8) top = vh - ph - 8
     }
 
     setPos({ top, left })
@@ -313,6 +324,13 @@ function Bubble({ step, rect, stepIndex, totalSteps, onNext, onPrev, onSkip, onG
       <div className={styles.bubbleTitle}>{step.title}</div>
       <div className={styles.bubbleContent}>{step.content}</div>
 
+      {/* Landscape hint — only show on mobile portrait */}
+      {step.landscapeHint && (
+        <div className={styles.landscapeHint}>
+          📱 Tip: rotate to landscape for a better view of this feature
+        </div>
+      )}
+
       {/* On mobile, show demo inline inside bubble instead of floating separately */}
       {InlineDemo && (
         <div className={styles.inlineDemo}>
@@ -334,7 +352,7 @@ function Bubble({ step, rect, stepIndex, totalSteps, onNext, onPrev, onSkip, onG
 // ---------------------------------------------------------------------------
 // Main Tour
 // ---------------------------------------------------------------------------
-export default function Tour({ onDone, onOpenCoverLetter, onCloseCoverLetter }) {
+export default function Tour({ onDone, onOpenCoverLetter, onCloseCoverLetter, onSwitchTab }) {
   const [stepIndex, setStepIndex] = useState(0)
   const [rect, setRect] = useState(null)
   const [visible, setVisible] = useState(false)
@@ -353,6 +371,7 @@ export default function Tour({ onDone, onOpenCoverLetter, onCloseCoverLetter }) 
 
   useEffect(() => {
     if (step.openModal) onOpenCoverLetter?.()
+    if (step.switchTab) onSwitchTab?.(step.switchTab)
     const t = setTimeout(() => { measureTarget(); setVisible(true) }, step.openModal ? 400 : 80)
     return () => clearTimeout(t)
   }, [stepIndex])

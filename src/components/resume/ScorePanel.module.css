@@ -1,7 +1,7 @@
 .panel {
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  overflow: hidden;
+  overflow: visible;
   background: var(--surface2);
 }
 
@@ -13,6 +13,7 @@
   cursor: pointer;
   user-select: none;
   background: var(--surface2);
+  border-radius: var(--radius) var(--radius) 0 0;
 }
 
 .panelTitle {

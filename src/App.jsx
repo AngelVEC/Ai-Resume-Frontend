@@ -221,6 +221,7 @@ export default function App() {
           onDone={endTour}
           onOpenCoverLetter={() => { setActiveTab('output'); setTourCoverLetter(true) }}
           onCloseCoverLetter={() => setTourCoverLetter(false)}
+          onSwitchTab={(tab) => setActiveTab(tab)}
         />
       )}
       <ErrorToast error={apiError} onDismiss={() => setApiError(null)} />

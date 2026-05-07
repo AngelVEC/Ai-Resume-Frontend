@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import ScorePanel from '../resume/ScorePanel'
 import styles from './LeftPanel.module.css'
 
@@ -11,9 +11,24 @@ export default function LeftPanel({ onGenerate, loading }) {
 
   const [hasFile, setHasFile] = useState(false)
   const [hasJD, setHasJD] = useState(false)
-  const [scoreKey, setScoreKey] = useState(0) // increment to re-analyse
+  const [scoreKey, setScoreKey] = useState(0)
   const [analysing, setAnalysing] = useState(false)
   const [showScore, setShowScore] = useState(false)
+
+  // Clear all inputs on mount so browser-cached values don't mismatch React state
+  useEffect(() => {
+    if (fileRef.current) fileRef.current.value = ''
+    if (jdRef.current) jdRef.current.value = ''
+    if (extraRef.current) extraRef.current.value = ''
+    fileStateRef.current.file = null
+    // Reset upload zone appearance
+    const zone = document.getElementById('upload-zone')
+    const label = document.getElementById('file-label')
+    const hint = document.getElementById('file-hint')
+    if (zone) zone.classList.remove(styles.hasFile)
+    if (label) label.textContent = 'Click or drag to upload'
+    if (hint) hint.textContent = 'PDF or DOCX · max 5 MB'
+  }, [])
 
   const canAnalyse = hasFile && hasJD && !loading
 

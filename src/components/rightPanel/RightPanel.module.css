@@ -162,7 +162,8 @@
   padding: 3px 8px;
   transition: color 0.12s, border-color 0.12s;
 }
-.coverLetterBtn:hover { color: var(--text); border-color: var(--border-hover); }
+.coverLetterBtn:hover:not(:disabled) { color: var(--text); border-color: var(--border-hover); }
+.coverLetterBtn:disabled { opacity: 0.35; cursor: not-allowed; }
 
 .copyBtn {
   display: flex;

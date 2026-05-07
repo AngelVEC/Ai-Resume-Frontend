@@ -36,10 +36,16 @@ export default function App() {
       const { done, value } = await reader.read()
       if (done) break
       const raw = decoder.decode(value, { stream: true })
+      
+      // TEMP DEBUG — remove after testing
+      console.log('SSE RAW CHUNK:', JSON.stringify(raw))
       for (const line of raw.split('\n')) {
         if (!line.startsWith('data: ')) continue
         try {
           const payload = JSON.parse(line.slice(6))
+
+          // TEMP DEBUG
+          console.log('SSE PAYLOAD:', payload)
           // Structured error from backend (rate limit, auth, etc.)
           if (payload.error) {
             const err = new Error(payload.message || payload.error)

@@ -4,6 +4,7 @@ import RightPanel from './components/rightPanel/RightPanel'
 import ErrorToast from './components/ErrorToast'
 import Tour, { useTour } from './components/guideTour/Tour'
 import styles from './App.module.css'
+import { Analytics } from "@vercel/analytics/react"
 
 // importing env variable
 const API_BASE = import.meta.env.VITE_API_URL || ''
@@ -225,6 +226,8 @@ export default function App() {
         />
       )}
       <ErrorToast error={apiError} onDismiss={() => setApiError(null)} />
+
+      <Analytics />
     </div>
   )
 }

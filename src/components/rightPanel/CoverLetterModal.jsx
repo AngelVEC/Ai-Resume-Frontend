@@ -57,7 +57,19 @@ export default function CoverLetterModal({ resumeText, jobDescription, onClose, 
   const [slideDir, setSlideDir] = useState(null) // 'left' | 'right' | null
 
   // Generate on mount — skip if opened by tour (no real resume yet)
-  useEffect(() => { if (!isTourPreview) generate() }, [])
+  useEffect(() => {
+    if (!isTourPreview) {
+      if (!resumeText || !jobDescription) {
+        setError({
+          error: 'missing_data',
+          title: 'Session expired',
+          message: 'Your resume data was lost on page refresh. Please re-upload your resume and regenerate before using Cover Letter.',
+        })
+        return
+      }
+      generate()
+    }
+  }, [])
 
   // Close on Escape
   useEffect(() => {

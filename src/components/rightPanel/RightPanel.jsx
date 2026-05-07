@@ -70,7 +70,7 @@ function CopyButton({ text }) {
   )
 }
 
-function Message({ role, content, isStreaming, onCoverLetter, onCheckScore, chatEnabled }) {
+function Message({ role, content, isStreaming, onCoverLetter, onCheckScore, chatEnabled, hasResumeText }) {
   return (
     <div className={role === 'assistant' ? styles.aiBubble : styles.userBubble}>
       {role === 'user' && <span className={styles.userLabel}>You</span>}
@@ -80,7 +80,13 @@ function Message({ role, content, isStreaming, onCoverLetter, onCheckScore, chat
           {!isStreaming && content && <CopyButton text={content} />}
           {!isStreaming && content && <DownloadButton content={content} />}
           {!isStreaming && content && chatEnabled && (
-            <button id="tour-cover-letter-btn" className={styles.coverLetterBtn} onClick={onCoverLetter} title="Generate cover letter">
+            <button
+              id="tour-cover-letter-btn"
+              className={styles.coverLetterBtn}
+              onClick={onCoverLetter}
+              disabled={!hasResumeText}
+              title={hasResumeText ? 'Generate cover letter' : 'Please regenerate your resume first'}
+            >
               <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
                 <rect x="1.5" y="2.5" width="10" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.2"/>
                 <path d="M1.5 5l5 3 5-3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -236,6 +242,7 @@ export default function RightPanel({ messages, streaming, streamingText, chatEna
                   onCoverLetter={() => setShowCoverLetter(true)}
                   onCheckScore={() => setScoreTarget(displayContent)}
                   chatEnabled={chatEnabled}
+                  hasResumeText={!!resumeText}
                 />
                 {msg.role === 'assistant' && scoreTarget && scoreTarget === displayContent && jobDescription && (
                   <RightScorePanel

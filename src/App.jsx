@@ -6,7 +6,6 @@ import Tour, { useTour } from './components/guideTour/Tour'
 import styles from './App.module.css'
 import { Analytics } from "@vercel/analytics/react"
 
-// importing env variable
 const API_BASE = import.meta.env.VITE_API_URL || ''
 
 export default function App() {
@@ -24,39 +23,46 @@ export default function App() {
   const { showTour, startTour, endTour } = useTour()
 
   // -------------------------------------------------------------------------
-  // Read an SSE stream, calling onChunk per text chunk, returns full text (it's for the reply that generated from AI response)
+  // Read an SSE stream, calling onChunk per text chunk, returns full text
   // -------------------------------------------------------------------------
   async function readStream(response, onChunk) {
     const reader = response.body.getReader()
     const decoder = new TextDecoder()
     let fullText = ''
     let resumeTextFromServer = ''
+    let buffer = ''
 
     while (true) {
       const { done, value } = await reader.read()
       if (done) break
-      const raw = decoder.decode(value, { stream: true })
-      
-      // TEMP DEBUG — remove after testing
-      console.log('SSE RAW CHUNK:', JSON.stringify(raw))
-      for (const line of raw.split('\n')) {
+      buffer += decoder.decode(value, { stream: true })
+
+      // Process only complete lines to handle split TCP packets
+      const lines = buffer.split('\n')
+      buffer = lines.pop() // keep last incomplete line in buffer
+
+      for (const line of lines) {
         if (!line.startsWith('data: ')) continue
         try {
           const payload = JSON.parse(line.slice(6))
-
-          // TEMP DEBUG
-          console.log('SSE PAYLOAD:', payload)
-          // Structured error from backend (rate limit, auth, etc.)
           if (payload.error) {
             const err = new Error(payload.message || payload.error)
-            err.structured = payload  // attach full error object
+            err.structured = payload
             throw err
           }
           if (payload.text) { fullText += payload.text; onChunk(fullText) }
-          if (payload.done && payload.resume_text) resumeTextFromServer = payload.resume_text
+          // Decode base64-encoded resume_text to preserve real newlines
+          if (payload.resume_text_b64) {
+            resumeTextFromServer = decodeURIComponent(
+              atob(payload.resume_text_b64).split('').map(c =>
+                '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+              ).join('')
+            )
+          }
+          // Fallback for old format
+          if (payload.resume_text) resumeTextFromServer = payload.resume_text
         } catch (e) {
-          if (e.structured) throw e  // re-throw structured errors
-          // ignore JSON parse errors on incomplete SSE lines
+          if (e.structured) throw e
         }
       }
     }
@@ -73,6 +79,7 @@ export default function App() {
     setMessages([])
     setJobDescription(jd)
     setChatEnabled(false)
+    setResumeText('')
 
     const formData = new FormData()
     formData.append('resume', file)
@@ -97,7 +104,8 @@ export default function App() {
 
       setMessages([{ role: 'assistant', content: fullText }])
       setStreamingText('')
-      if (resumeTextFromServer) setResumeText(resumeTextFromServer)
+      // Use parsed resume text from server, fall back to generated text
+      setResumeText(resumeTextFromServer || fullText)
       setChatEnabled(true)
       setActiveTab('output')
     } catch (err) {
